@@ -22,7 +22,7 @@ const iconMap = {
  * Individual self-assessment question card.
  * Users respond with Yes or No buttons.
  */
-export default function QuestionCard({ icon, text }) {
+export default function QuestionCard({ icon, text, onAnswer }) {
   const [answer, setAnswer] = useState(null); // null | 'yes' | 'no'
   const IconComponent = iconMap[icon];
 
@@ -50,7 +50,11 @@ export default function QuestionCard({ icon, text }) {
       <div className="flex items-center gap-2 flex-shrink-0">
         <button
           type="button"
-          onClick={() => setAnswer((prev) => (prev === 'yes' ? null : 'yes'))}
+          onClick={() => {
+            const newVal = answer === 'yes' ? null : 'yes';
+            setAnswer(newVal);
+            onAnswer?.(newVal);
+          }}
           className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 
             ${
               answer === 'yes'
@@ -62,7 +66,11 @@ export default function QuestionCard({ icon, text }) {
         </button>
         <button
           type="button"
-          onClick={() => setAnswer((prev) => (prev === 'no' ? null : 'no'))}
+          onClick={() => {
+            const newVal = answer === 'no' ? null : 'no';
+            setAnswer(newVal);
+            onAnswer?.(newVal);
+          }}
           className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-200
             ${
               answer === 'no'
