@@ -10,12 +10,12 @@ export default function Footer() {
       </p>
 
       <div className="flex flex-wrap justify-center gap-md">
-        <a
+        {/* <a
           href="#"
           className="text-on-surface-variant font-medium hover:text-primary transition-colors"
         >
           Research Ethics
-        </a>
+        </a> */}
         <a
           href="#"
           className="text-on-surface-variant font-medium hover:text-primary transition-colors"

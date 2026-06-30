@@ -29,8 +29,10 @@ export default function SurveySection({ questions }) {
     setAnswers((prev) => ({ ...prev, [questionId]: answer }));
   };
 
+  const answeredCount = Object.keys(answers).length;
+  const minRequired = 3;
   const isFormValid =
-    name.trim() !== '' && contactMethod !== '' && contactValue.trim() !== '';
+    name.trim() !== '' && contactMethod !== '' && contactValue.trim() !== '' && answeredCount >= minRequired;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -274,7 +276,12 @@ export default function SurveySection({ questions }) {
         )}
 
         {/* ── Submit Button ──────────────────────────────────── */}
-        <div className="flex justify-center pt-md pb-xl">
+        <div className="flex flex-col items-center pt-md pb-xl gap-3">
+          {answeredCount < minRequired && (
+            <p className="text-label-md text-on-surface-variant">
+              At least <span className="font-bold text-primary">3 questions</span> are required
+            </p>
+          )}
           <button
             type="submit"
             disabled={!isFormValid || isSubmitting}

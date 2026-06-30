@@ -18,10 +18,7 @@ export default function App() {
       <main className="relative pt-xl">
         <Hero />
 
-        <InfoCard
-          title='The "Fog" is Real'
-          description='Early research suggests mental overload from digital saturation is reshaping how we process focus. We are investigating how modern screen time correlates with what participants describe as "mental friction."'
-        />
+        <InfoCard />
 
         <SurveySection questions={questions} />
       </main>
