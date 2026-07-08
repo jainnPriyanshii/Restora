@@ -1,7 +1,13 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import QuestionCard from "../QuestionCard/QuestionCard";
+import ResultTeaser from "../ResultTeaser/ResultTeaser";
 import supabase from "../../lib/supabase";
+import {
+  scoreAnswers,
+  DIMENSION_LABELS,
+  DIMENSION_INSIGHTS,
+} from "../../lib/scoreAnswersService";
 import PhoneInput, {
   isValidPhoneNumber,
   getCountryCallingCode,
@@ -89,6 +95,7 @@ export default function SurveySection({ questions = [] }) {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [scoreResult, setScoreResult] = useState(null);
 
   const totalSteps = questions.length + 1; // 1 for personal info
 
@@ -145,6 +152,8 @@ export default function SurveySection({ questions = [] }) {
 
       if (error) throw error;
 
+      const result = scoreAnswers(answers);
+      setScoreResult(result);
       setSubmitted(true);
     } catch (err) {
       console.error("Supabase insert error:", err);
@@ -156,28 +165,12 @@ export default function SurveySection({ questions = [] }) {
 
   if (submitted) {
     return (
-      <section className="mx-auto px-gutter py-xl max-w-[800px]">
-        <div className="p-xl border-2 border-secondary/30 rounded-xl text-center animate-fade-in-up glass-panel">
-          <div className="bg-secondary-fixed flex justify-center items-center mx-auto mb-md rounded-full w-20 h-20 animate-gentle-bounce">
-            <MdCheckCircle size={40} className="text-primary" />
-          </div>
-          <h2 className="mb-sm text-headline-lg text-primary">
-            Thank You, {name}!
-          </h2>
-          <p className="mx-auto mb-md max-w-md text-body-lg text-on-surface-variant">
-            Your response has been recorded successfully. We'll reach out via{" "}
-            <span className="font-semibold text-secondary">
-              {contactMethod === "email" ? "email" : "mobile"}
-            </span>{" "}
-            at{" "}
-            <span className="font-semibold text-primary">{contactValue}</span>{" "}
-            with the research findings.
-          </p>
-          <div className="inline-block bg-primary-fixed/50 text-on-primary-fixed px-md py-sm rounded-full text-label-md">
-            🧠 Your contribution matters to science
-          </div>
-        </div>
-      </section>
+      <ResultTeaser
+        name={name}
+        contactMethod={contactMethod}
+        contactValue={contactValue}
+        scoreResult={scoreResult}
+      />
     );
   }
 
@@ -577,7 +570,7 @@ export default function SurveySection({ questions = [] }) {
                   <div className="flex flex-col justify-end items-center mt-2 text-center">
                     <MdSpa size={24} className="mb-1 text-[#f3d9cd]" />
                     <p className="mx-auto max-w-xs font-medium text-on-surface-variant text-xs">
-                      {currentQuestion.quote}
+                      {currentQuestion.insight}
                     </p>
                   </div>
                 </motion.div>
