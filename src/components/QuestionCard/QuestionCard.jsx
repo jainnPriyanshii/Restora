@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   MdAutoStories,
   MdPsychologyAlt,
@@ -22,8 +21,7 @@ const iconMap = {
  * Individual self-assessment question card.
  * Users respond with Yes or No buttons.
  */
-export default function QuestionCard({ icon, text, onAnswer }) {
-  const [answer, setAnswer] = useState(null); // null | 'yes' | 'no'
+export default function QuestionCard({ icon, text, answer, onAnswer }) {
   const IconComponent = iconMap[icon];
 
   return (
@@ -41,7 +39,7 @@ export default function QuestionCard({ icon, text, onAnswer }) {
         <IconComponent
           size={24}
           className={`text-secondary flex-shrink-0 transition-opacity
-            ${answer !== null ? 'opacity-100' : 'opacity-60'}`}
+            ${answer !== undefined && answer !== null ? 'opacity-100' : 'opacity-60'}`}
         />
       )}
 
@@ -52,7 +50,6 @@ export default function QuestionCard({ icon, text, onAnswer }) {
           type="button"
           onClick={() => {
             const newVal = answer === 'yes' ? null : 'yes';
-            setAnswer(newVal);
             onAnswer?.(newVal);
           }}
           className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 
@@ -68,7 +65,6 @@ export default function QuestionCard({ icon, text, onAnswer }) {
           type="button"
           onClick={() => {
             const newVal = answer === 'no' ? null : 'no';
-            setAnswer(newVal);
             onAnswer?.(newVal);
           }}
           className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-200
