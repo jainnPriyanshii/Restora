@@ -394,12 +394,13 @@ export default function SurveySection({ questions = [] }) {
                         `}</style>
                           <PhoneInput
                             id="contact-value"
-                            defaultCountry="IQ"
+                            defaultCountry="IN"
                             value={contactValue}
                             onChange={setContactValue}
                             countrySelectComponent={CustomCountrySelect}
                             placeholder="Enter your mobile number"
                             className="w-full text-on-surface custom-phone-input"
+                            limitMaxLength={true}
                           />
                           <div className="flex items-center gap-1.5 mt-2 px-1 text-on-surface-variant text-sm">
                             <svg
