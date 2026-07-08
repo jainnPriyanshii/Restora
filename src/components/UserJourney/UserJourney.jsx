@@ -38,7 +38,7 @@ const journeySteps = [
     title: 'AI assessment',
     description:
       'Restora\'s AI reads your fatigue patterns, attention habits, and digital load — then builds a personalised recovery plan just for your mind.',
-    icon: 'brain',
+    icon: 'chip',
   },
   {
     number: 6,
@@ -104,22 +104,32 @@ function JourneyIcon({ type, isActive }) {
         </polyline>
       </svg>
     ),
-    brain: (
+    chip: (
       <svg viewBox="0 0 48 48" fill="none" className={baseClass} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M24 44V24" />
-        <path d="M24 24c-4-2-10-2-12 2s0 10 4 12">
-          <animate attributeName="d" values="M24 24c-4-2-10-2-12 2s0 10 4 12;M24 24c-4-3-11-2-13 2s1 11 5 13;M24 24c-4-2-10-2-12 2s0 10 4 12" dur="4s" repeatCount="indefinite" />
-        </path>
-        <path d="M24 24c4-2 10-2 12 2s0 10-4 12">
-          <animate attributeName="d" values="M24 24c4-2 10-2 12 2s0 10-4 12;M24 24c4-3 11-2 13 2s-1 11-5 13;M24 24c4-2 10-2 12 2s0 10-4 12" dur="4s" repeatCount="indefinite" />
-        </path>
-        <path d="M12 18c-2-6 2-12 8-14" />
-        <path d="M36 18c2-6-2-12-8-14" />
-        <circle cx="18" cy="18" r="2">
-          <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" />
-        </circle>
-        <circle cx="30" cy="18" r="2">
-          <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite" />
+        <rect x="12" y="12" width="24" height="24" rx="4" />
+        <rect x="18" y="18" width="12" height="12" rx="2">
+          <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite" />
+        </rect>
+        {/* Top pins */}
+        <line x1="18" y1="6" x2="18" y2="12" />
+        <line x1="24" y1="6" x2="24" y2="12" />
+        <line x1="30" y1="6" x2="30" y2="12" />
+        {/* Bottom pins */}
+        <line x1="18" y1="36" x2="18" y2="42" />
+        <line x1="24" y1="36" x2="24" y2="42" />
+        <line x1="30" y1="36" x2="30" y2="42" />
+        {/* Left pins */}
+        <line x1="6" y1="18" x2="12" y2="18" />
+        <line x1="6" y1="24" x2="12" y2="24" />
+        <line x1="6" y1="30" x2="12" y2="30" />
+        {/* Right pins */}
+        <line x1="36" y1="18" x2="42" y2="18" />
+        <line x1="36" y1="24" x2="42" y2="24" />
+        <line x1="36" y1="30" x2="42" y2="30" />
+        {/* Pulse dot */}
+        <circle cx="24" cy="24" r="2">
+          <animate attributeName="r" values="1.5;3;1.5" dur="2s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite" />
         </circle>
       </svg>
     ),
@@ -329,15 +339,6 @@ export default function UserJourney() {
                     >
                       <JourneyIcon type={step.icon} isActive={isRevealed} />
                     </div>
-                    <div
-                      className={`absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold transition-all duration-500 ${
-                        isRevealed
-                          ? 'bg-primary text-on-primary shadow-md'
-                          : 'bg-surface-container-high text-on-surface-variant'
-                      }`}
-                    >
-                      {step.number}
-                    </div>
                   </div>
 
                   {/* Content */}
@@ -426,15 +427,6 @@ export default function UserJourney() {
                       >
                         <JourneyIcon type={step.icon} isActive={isRevealed} />
                       </div>
-                      <div
-                        className={`absolute -top-2 -right-2 w-7 h-7 rounded-full flex items-center justify-center text-label-sm font-bold transition-all duration-500 ${
-                          isRevealed
-                            ? 'bg-primary text-on-primary shadow-md scale-100'
-                            : 'bg-surface-container-high text-on-surface-variant scale-90'
-                        }`}
-                      >
-                        {step.number}
-                      </div>
                     </div>
                   </div>
 
@@ -474,18 +466,7 @@ export default function UserJourney() {
         </div>
       </div>
 
-      {/* ── Bottom Tagline ── */}
-      <motion.div
-        className="text-center mt-xl max-w-md mx-auto"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-      >
-        <p className="text-body-md text-on-surface-variant italic opacity-70">
-          Restora · <span className="text-primary font-medium">Out of the fog. Into the flow.</span>
-        </p>
-      </motion.div>
+
     </section>
   );
 }
