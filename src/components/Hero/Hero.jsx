@@ -10,9 +10,6 @@ export default function Hero() {
       <div className="items-center gap-8 grid grid-cols-1 md:grid-cols-2 w-full">
         <div className="flex flex-col items-start gap-6 text-left">
           <div className="flex flex-col gap-1">
-            <span className="font-black text-headline-md text-primary tracking-wide">
-              Restora
-            </span>
             <span className="font-bold text-label-md text-secondary uppercase tracking-widest">
               Out of the Fog, Into the Flow
             </span>
