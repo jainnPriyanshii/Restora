@@ -1,4 +1,6 @@
 import { MdCheckCircle } from "react-icons/md";
+import { useEffect } from "react";
+import { trackEvent } from "../../lib/analytics";
 import {
   DIMENSION_LABELS,
   DIMENSION_INSIGHTS,
@@ -145,6 +147,14 @@ export default function ResultTeaser({
   const sev = SEVERITY_STYLES[severity] || SEVERITY_STYLES.moderate;
   const dominantLabel = DIMENSION_LABELS[dominantDimension];
   const dominantInsight = DIMENSION_INSIGHTS[dominantDimension];
+
+  useEffect(() => {
+    trackEvent("Result Viewed", {
+      overall_score: overall,
+      dominant_dimension: dominantDimension,
+      severity: severity
+    });
+  }, [overall, dominantDimension, severity]);
 
   return (
     <section className="mx-auto px-gutter py-xl max-w-[800px] animate-fade-in-up">

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import QuestionCard from "../QuestionCard/QuestionCard";
 import ResultTeaser from "../ResultTeaser/ResultTeaser";
@@ -8,6 +8,7 @@ import {
   DIMENSION_LABELS,
   DIMENSION_INSIGHTS,
 } from "../../lib/scoreAnswersService";
+import { trackEvent, identifyUser } from "../../lib/analytics";
 import PhoneInput, {
   isValidPhoneNumber,
   getCountryCallingCode,
@@ -88,6 +89,10 @@ const iconMap = {
  */
 export default function SurveySection({ questions = [] }) {
   const [currentStep, setCurrentStep] = useState(0);
+
+  useEffect(() => {
+    trackEvent("Survey Intro Viewed");
+  }, []);
   const [name, setName] = useState("");
   const [contactMethod, setContactMethod] = useState(""); // '' | 'email' | 'mobile'
   const [contactValue, setContactValue] = useState("");
@@ -101,6 +106,13 @@ export default function SurveySection({ questions = [] }) {
 
   const handleAnswer = (questionId, answer) => {
     setAnswers((prev) => ({ ...prev, [questionId]: answer }));
+    
+    const question = questions.find(q => q.id === questionId);
+    trackEvent("Question Answered", {
+      question_id: questionId,
+      question_category: question?.category,
+      answer_value: answer
+    });
   };
 
   const isPersonalInfoValid = (() => {
@@ -117,6 +129,17 @@ export default function SurveySection({ questions = [] }) {
 
   const handleNext = () => {
     if (currentStep === 0 && !isPersonalInfoValid) return;
+
+    if (currentStep === 0) {
+      identifyUser(contactValue.trim(), {
+        name: name.trim(),
+        contact_method: contactMethod,
+      });
+      trackEvent("Survey Started", {
+        total_questions: questions.length
+      });
+    }
+
     if (currentStep < totalSteps - 1) {
       setCurrentStep((prev) => prev + 1);
     }
@@ -155,9 +178,20 @@ export default function SurveySection({ questions = [] }) {
       const result = scoreAnswers(answers);
       setScoreResult(result);
       setSubmitted(true);
+
+      trackEvent("Survey Completed", {
+        total_answered: Object.keys(answers).length,
+        overall_score: result.overallScore,
+        dominant_dimension: result.dominantDimension,
+        severity: result.severity
+      });
     } catch (err) {
       console.error("Supabase insert error:", err);
       setSubmitError(err.message || "Something went wrong. Please try again.");
+      
+      trackEvent("Survey Error", {
+        error_message: err.message
+      });
     } finally {
       setIsSubmitting(false);
     }
